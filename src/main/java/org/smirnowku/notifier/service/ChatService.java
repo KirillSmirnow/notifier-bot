@@ -6,5 +6,5 @@ public interface ChatService {
 
     Chat create(Chat chat);
 
-    Chat getByTelegramId(int telegramId);
+    Chat getByTelegramId(long telegramId);
 }

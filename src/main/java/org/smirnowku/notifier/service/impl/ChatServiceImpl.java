@@ -23,7 +23,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Chat getByTelegramId(int telegramId) {
+    public Chat getByTelegramId(long telegramId) {
         return chatRepository.findByTelegramId(telegramId)
                 .orElseThrow(() -> new NotFoundException("Chat %d not found", telegramId));
     }
