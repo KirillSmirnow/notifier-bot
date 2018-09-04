@@ -2,6 +2,7 @@ package org.smirnowku.notifier.bot;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.smirnowku.notifier.bot.processor.CommandProcessor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -10,10 +11,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class NotifierLongPollingBot extends TelegramLongPollingBot implements NotifierBotMessageSender {
+public class NotifierLongPollingBot extends TelegramLongPollingBot {
 
     private final NotifierBotProperties properties;
-    private final NotifierCommandProcessor notifierCommandProcessor;
+    private final CommandProcessor commandProcessor;
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -38,14 +39,9 @@ public class NotifierLongPollingBot extends TelegramLongPollingBot implements No
         return properties.getBotUsername();
     }
 
-    @Override
-    public void sendMessage(String text) {
-
-    }
-
     private void processCommand(long chatId, String command) {
         log.info("Command {} from {}", command, chatId);
-        notifierCommandProcessor.process(command, chatId, this);
+        commandProcessor.process(chatId, command);
     }
 
     private void processText(long chatId, String text) {
