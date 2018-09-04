@@ -2,7 +2,10 @@ package org.smirnowku.notifier.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.RandomStringUtils;
-import org.smirnowku.notifier.dto.ChannelCreate;
+import org.smirnowku.notifier.dto.channel.ChannelAsAdmin;
+import org.smirnowku.notifier.dto.channel.ChannelCreate;
+import org.smirnowku.notifier.exception.ConflictException;
+import org.smirnowku.notifier.exception.NotFoundException;
 import org.smirnowku.notifier.model.Channel;
 import org.smirnowku.notifier.model.User;
 import org.smirnowku.notifier.repository.ChannelRepository;
@@ -10,6 +13,7 @@ import org.smirnowku.notifier.service.ChannelService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,24 +22,31 @@ public class ChannelServiceImpl implements ChannelService {
     private final ChannelRepository channelRepository;
 
     @Override
-    public Channel create(ChannelCreate channelCreate) {
+    public ChannelAsAdmin create(ChannelCreate channelCreate) {
         Channel channel = channelCreate.isRestricted() ? createPrivate(channelCreate) : createPublic(channelCreate);
-        return channelRepository.save(channel);
+        if (channelRepository.findByName(channelCreate.getName()).isPresent()) {
+            throw new ConflictException("Channel with such name already exists");
+        }
+        return ChannelAsAdmin.of(channelRepository.save(channel));
+    }
+
+    @Override
+    public Collection<ChannelAsAdmin> getByAdmin(User admin) {
+        return channelRepository.findByAdmin(admin).stream()
+                .map(ChannelAsAdmin::of)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Channel getByName(String name) {
-        return null;
+        return channelRepository.findByName(name)
+                .orElseThrow(() -> new NotFoundException("Channel '%s' not found", name));
     }
 
     @Override
     public Channel getByToken(String token) {
-        return null;
-    }
-
-    @Override
-    public Collection<Channel> getByAdmin(User admin) {
-        return null;
+        return channelRepository.findByToken(token)
+                .orElseThrow(() -> new NotFoundException("Channel not found"));
     }
 
     private Channel createPublic(ChannelCreate channelCreate) {

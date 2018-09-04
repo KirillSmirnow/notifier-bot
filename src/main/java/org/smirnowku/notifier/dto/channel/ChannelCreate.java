@@ -1,4 +1,4 @@
-package org.smirnowku.notifier.dto;
+package org.smirnowku.notifier.dto.channel;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
