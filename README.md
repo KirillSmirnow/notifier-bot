@@ -1,1 +1,1 @@
-# notifier-bot
+# Notifier Bot
