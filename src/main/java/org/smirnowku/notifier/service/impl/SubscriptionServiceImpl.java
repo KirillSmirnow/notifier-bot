@@ -3,6 +3,7 @@ package org.smirnowku.notifier.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.smirnowku.notifier.dto.subscription.SubscriptionAsSubscriber;
 import org.smirnowku.notifier.dto.subscription.SubscriptionCreate;
+import org.smirnowku.notifier.exception.ConflictException;
 import org.smirnowku.notifier.model.Channel;
 import org.smirnowku.notifier.model.Chat;
 import org.smirnowku.notifier.model.Subscription;
@@ -23,6 +24,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public SubscriptionAsSubscriber subscribe(SubscriptionCreate subscriptionCreate) {
         Chat subscriber = subscriptionCreate.getChat();
         Channel channel = subscriptionCreate.getChannel();
+        if (isSubscribed(subscriber, channel)) {
+            throw new ConflictException("You are already subscribed to this channel");
+        }
         Subscription subscription = new Subscription(subscriber, channel);
         return SubscriptionAsSubscriber.of(subscriptionRepository.save(subscription));
     }
@@ -37,5 +41,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return subscriptionRepository.findByChat(subscriber).stream()
                 .map(SubscriptionAsSubscriber::of)
                 .collect(Collectors.toList());
+    }
+
+    private boolean isSubscribed(Chat chat, Channel channel) {
+        return subscriptionRepository.existsByChannelAndChat(channel, chat);
     }
 }
