@@ -1,6 +1,7 @@
 package org.smirnowku.notifier.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -16,6 +17,7 @@ import javax.validation.constraints.Pattern;
         @Index(columnList = "token", unique = true)})
 @Getter
 @Setter
+@NoArgsConstructor
 @ToString(callSuper = true)
 public class Channel extends BaseModel {
 
@@ -27,5 +29,20 @@ public class Channel extends BaseModel {
     private String name;
 
     private String token;
-    private String subscription_code;
+    private String subscriptionCode;
+
+    public static Channel createPublic(User admin, String name, String token) {
+        return new Channel(admin, name, token, null);
+    }
+
+    public static Channel createPrivate(User admin, String name, String token, String subscriptionCode) {
+        return new Channel(admin, name, token, subscriptionCode);
+    }
+
+    private Channel(User admin, String name, String token, String subscriptionCode) {
+        this.admin = admin;
+        this.name = name;
+        this.token = token;
+        this.subscriptionCode = subscriptionCode;
+    }
 }
