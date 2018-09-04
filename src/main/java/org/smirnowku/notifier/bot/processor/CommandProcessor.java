@@ -7,7 +7,6 @@ import org.smirnowku.notifier.dto.channel.ChannelAsSubscriber;
 import org.smirnowku.notifier.dto.channel.ChannelCreate;
 import org.smirnowku.notifier.dto.subscription.SubscriptionAsSubscriber;
 import org.smirnowku.notifier.dto.subscription.SubscriptionCreate;
-import org.smirnowku.notifier.exception.BaseException;
 import org.smirnowku.notifier.model.Channel;
 import org.smirnowku.notifier.model.Chat;
 import org.smirnowku.notifier.service.ChannelService;
@@ -30,29 +29,25 @@ public class CommandProcessor {
 
     public void process(long chatId, String command) {
         textProcessor.removeListener(chatId);
-        try {
-            switch (command) {
-                case "/start":
-                    start(chatId);
-                    break;
-                case "/list":
-                    list(chatId);
-                    break;
-                case "/subscribe":
-                    subscribe(chatId);
-                    break;
-                case "/unsubscribe":
-                    unsubscribe(chatId);
-                    break;
-                case "/create":
-                    create(chatId);
-                    break;
-                case "/admin":
-                    admin(chatId);
-                    break;
-            }
-        } catch (BaseException e) {
-            messageSender.send(chatId, e.getMessage());
+        switch (command) {
+            case "/start":
+                start(chatId);
+                break;
+            case "/list":
+                list(chatId);
+                break;
+            case "/subscribe":
+                subscribe(chatId);
+                break;
+            case "/unsubscribe":
+                unsubscribe(chatId);
+                break;
+            case "/create":
+                create(chatId);
+                break;
+            case "/admin":
+                admin(chatId);
+                break;
         }
     }
 
@@ -84,7 +79,7 @@ public class CommandProcessor {
         Chat chat = chatService.getByTelegramId(chatId);
         Channel channel = channelService.getByName(channelName);
         subscriptionService.subscribe(new SubscriptionCreate(chat, channel));
-        messageSender.send(chatId, "You have been subscribed to channel " + channel.getName());
+        messageSender.send(chatId, "You have subscribed to channel " + channel.getName());
     }
 
     private void unsubscribe(long chatId) {
@@ -96,7 +91,7 @@ public class CommandProcessor {
         Chat chat = chatService.getByTelegramId(chatId);
         Channel channel = channelService.getByName(channelName);
         subscriptionService.unsubscribe(chat, channel);
-        messageSender.send(chatId, "You have been unsubscribed from channel " + channel.getName());
+        messageSender.send(chatId, "You have unsubscribed from channel " + channel.getName());
     }
 
     private void create(long chatId) {

@@ -38,7 +38,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (subscription.isPresent()) {
             subscriptionRepository.delete(subscription.get());
         } else {
-            throw new ConflictException("You are not subscribed to this chat");
+            throw new ConflictException("You are not subscribed to this channel");
         }
     }
 

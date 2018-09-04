@@ -2,7 +2,6 @@ package org.smirnowku.notifier.bot.processor;
 
 import lombok.RequiredArgsConstructor;
 import org.smirnowku.notifier.bot.message.MessageSender;
-import org.smirnowku.notifier.exception.BaseException;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -19,11 +18,7 @@ public class TextProcessor {
     public void process(long chatId, String text) {
         TextMessageReceivedListener listener = listeners.get(chatId);
         if (listener != null) {
-            try {
-                listener.onTextMessageReceived(text);
-            } catch (BaseException e) {
-                messageSender.send(chatId, e.getMessage());
-            }
+            listener.onTextMessageReceived(text);
             removeListener(chatId);
         }
     }
