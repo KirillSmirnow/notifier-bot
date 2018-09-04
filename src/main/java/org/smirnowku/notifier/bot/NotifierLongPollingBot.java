@@ -28,9 +28,9 @@ public class NotifierLongPollingBot extends TelegramLongPollingBot {
             Message message = update.getMessage();
             long chatId = message.getChatId();
             if (message.isCommand()) {
-                processCommand(chatId, message.getText());
+                commandProcessor.process(chatId, message.getText());
             } else {
-                processText(chatId, message.getText());
+                textProcessor.process(chatId, message.getText());
             }
         }
     }
@@ -43,15 +43,5 @@ public class NotifierLongPollingBot extends TelegramLongPollingBot {
     @Override
     public String getBotUsername() {
         return properties.getBotUsername();
-    }
-
-    private void processCommand(long chatId, String command) {
-        log.info("Command {} from {}", command, chatId);
-        commandProcessor.process(chatId, command);
-    }
-
-    private void processText(long chatId, String text) {
-        log.info("Text {} from {}", text, chatId);
-        textProcessor.process(chatId, text);
     }
 }

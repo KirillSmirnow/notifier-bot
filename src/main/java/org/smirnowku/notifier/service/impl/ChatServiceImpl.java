@@ -17,7 +17,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat create(Chat chat) {
         if (chatRepository.findByTelegramId(chat.getTelegramId()).isPresent()) {
-            throw new ConflictException("Chat with Telegram ID %d already exists", chat.getTelegramId());
+            throw new ConflictException("You are already registered in the service");
         }
         return chatRepository.save(chat);
     }

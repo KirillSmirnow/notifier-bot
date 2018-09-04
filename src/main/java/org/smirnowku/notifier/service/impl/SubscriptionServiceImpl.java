@@ -12,6 +12,7 @@ import org.smirnowku.notifier.service.SubscriptionService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,8 +33,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void unsubscribe(Subscription subscription) {
-        subscriptionRepository.delete(subscription);
+    public void unsubscribe(Chat chat, Channel channel) {
+        Optional<Subscription> subscription = subscriptionRepository.findByChannelAndChat(channel, chat);
+        if (subscription.isPresent()) {
+            subscriptionRepository.delete(subscription.get());
+        } else {
+            throw new ConflictException("You are not subscribed to this chat");
+        }
     }
 
     @Override
