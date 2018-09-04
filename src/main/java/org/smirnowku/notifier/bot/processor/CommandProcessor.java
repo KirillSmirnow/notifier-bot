@@ -10,18 +10,31 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CommandProcessor {
 
-    private final ChatService chatService;
     private final MessageSender messageSender;
+    private final ChatService chatService;
 
     public void process(long chatId, String command) {
         switch (command) {
             case "/start":
                 start(chatId);
                 break;
+
+            case "/subscribe":
+                subscribe(chatId);
+                break;
         }
     }
 
     private void start(long chatId) {
-        chatService.create(new Chat(chatId));
+        try {
+            chatService.create(new Chat(chatId));
+            messageSender.send(chatId, "You have been registered in the service");
+        } catch (Exception e) {
+            messageSender.send(chatId, "You are already registered in the service");
+        }
+    }
+
+    private void subscribe(long chatId) {
+        messageSender.send(chatId, "Write the name of the channel you want to subscribe to");
     }
 }
