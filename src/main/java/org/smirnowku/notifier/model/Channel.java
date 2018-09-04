@@ -22,7 +22,7 @@ import javax.validation.constraints.Pattern;
 public class Channel extends BaseModel {
 
     @ManyToOne
-    private User admin;
+    private Chat admin;
 
     @NotNull
     @Pattern(regexp = "[a-z-]{3,50}")
@@ -31,15 +31,15 @@ public class Channel extends BaseModel {
     private String token;
     private String subscriptionCode;
 
-    public static Channel createPublic(User admin, String name, String token) {
+    public static Channel createPublic(Chat admin, String name, String token) {
         return new Channel(admin, name, token, null);
     }
 
-    public static Channel createPrivate(User admin, String name, String token, String subscriptionCode) {
+    public static Channel createPrivate(Chat admin, String name, String token, String subscriptionCode) {
         return new Channel(admin, name, token, subscriptionCode);
     }
 
-    private Channel(User admin, String name, String token, String subscriptionCode) {
+    private Channel(Chat admin, String name, String token, String subscriptionCode) {
         this.admin = admin;
         this.name = name;
         this.token = token;

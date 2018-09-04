@@ -7,7 +7,7 @@ import org.smirnowku.notifier.dto.channel.ChannelCreate;
 import org.smirnowku.notifier.exception.ConflictException;
 import org.smirnowku.notifier.exception.NotFoundException;
 import org.smirnowku.notifier.model.Channel;
-import org.smirnowku.notifier.model.User;
+import org.smirnowku.notifier.model.Chat;
 import org.smirnowku.notifier.repository.ChannelRepository;
 import org.smirnowku.notifier.service.ChannelService;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public Collection<ChannelAsAdmin> getByAdmin(User admin) {
+    public Collection<ChannelAsAdmin> getByAdmin(Chat admin) {
         return channelRepository.findByAdmin(admin).stream()
                 .map(ChannelAsAdmin::of)
                 .collect(Collectors.toList());

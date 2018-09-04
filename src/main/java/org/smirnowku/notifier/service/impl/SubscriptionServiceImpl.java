@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.smirnowku.notifier.dto.subscription.SubscriptionAsSubscriber;
 import org.smirnowku.notifier.dto.subscription.SubscriptionCreate;
 import org.smirnowku.notifier.model.Channel;
+import org.smirnowku.notifier.model.Chat;
 import org.smirnowku.notifier.model.Subscription;
-import org.smirnowku.notifier.model.User;
 import org.smirnowku.notifier.repository.SubscriptionRepository;
 import org.smirnowku.notifier.service.SubscriptionService;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionAsSubscriber subscribe(SubscriptionCreate subscriptionCreate) {
-        User subscriber = subscriptionCreate.getUser();
+        Chat subscriber = subscriptionCreate.getChat();
         Channel channel = subscriptionCreate.getChannel();
         Subscription subscription = new Subscription(subscriber, channel);
         return SubscriptionAsSubscriber.of(subscriptionRepository.save(subscription));
@@ -33,8 +33,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public Collection<SubscriptionAsSubscriber> getBySubscriber(User subscriber) {
-        return subscriptionRepository.findByUser(subscriber).stream()
+    public Collection<SubscriptionAsSubscriber> getBySubscriber(Chat subscriber) {
+        return subscriptionRepository.findByChat(subscriber).stream()
                 .map(SubscriptionAsSubscriber::of)
                 .collect(Collectors.toList());
     }

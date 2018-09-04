@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.smirnowku.notifier.model.Channel;
-import org.smirnowku.notifier.model.User;
+import org.smirnowku.notifier.model.Chat;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubscriptionCreate {
 
-    private User user;
+    private Chat chat;
     private Channel channel;
 }

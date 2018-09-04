@@ -14,7 +14,7 @@ import javax.persistence.ManyToOne;
 public class Subscription extends BaseModel {
 
     @ManyToOne(optional = false)
-    private User user;
+    private Chat chat;
 
     @ManyToOne(optional = false)
     private Channel channel;

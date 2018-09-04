@@ -1,8 +1,6 @@
 package org.smirnowku.notifier.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,6 +9,10 @@ import javax.persistence.Table;
 @Table(name = "n_user")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString(callSuper = true)
-public class User extends BaseModel {
+public class Chat extends BaseModel {
+
+    private long telegramId;
 }

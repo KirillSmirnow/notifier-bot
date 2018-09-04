@@ -10,19 +10,20 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class NotifierLongPollingBot extends TelegramLongPollingBot {
+public class NotifierLongPollingBot extends TelegramLongPollingBot implements NotifierBotMessageSender {
 
     private final NotifierBotProperties properties;
+    private final NotifierCommandProcessor notifierCommandProcessor;
 
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
             Message message = update.getMessage();
-            int userId = 0;
+            long chatId = message.getChatId();
             if (message.isCommand()) {
-                processCommand(userId, message.getText());
+                processCommand(chatId, message.getText());
             } else {
-                processText(userId, message.getText());
+                processText(chatId, message.getText());
             }
         }
     }
@@ -37,11 +38,17 @@ public class NotifierLongPollingBot extends TelegramLongPollingBot {
         return properties.getBotUsername();
     }
 
-    private void processCommand(int userId, String command) {
-        log.info("Command {} from {}", command, userId);
+    @Override
+    public void sendMessage(String text) {
+
     }
 
-    private void processText(int userId, String text) {
-        log.info("Text {} from {}", text, userId);
+    private void processCommand(long chatId, String command) {
+        log.info("Command {} from {}", command, chatId);
+        notifierCommandProcessor.process(command, chatId, this);
+    }
+
+    private void processText(long chatId, String text) {
+        log.info("Text {} from {}", text, chatId);
     }
 }
