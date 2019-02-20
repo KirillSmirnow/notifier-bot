@@ -12,7 +12,7 @@ Register your chat with command `/start`
 * To see all your channels execute `/admin`
 * Now you can send notification:
 ```
-curl -XPOST "http://sakhalin.market:33333/channels/<token>/notify" -d "message=Hi!"
+curl -XPOST "http://notifier.thistle.ml/channels/<token>/notify" -d "message=Hi!"
 ```
 * Notifications will be received by all subscribers of your channel
 
